@@ -1,0 +1,92 @@
+:root {
+    --navbar-text-color: #fff;
+    --navbar-button-color: #387478;
+    --navbar-padding: 1.5rem;
+    --navbar-button-spacing: 1.5rem;
+    --navbar-buttons-border-radius: 0px;
+    --navbar-button-width: 5rem; /* Minimum width for navbar buttons */
+    --navbar-button-height: 2.5rem; /* Minimum height for navbar buttons */
+  }
+  
+  body {
+    margin: 0;
+    background-color: #243642;
+    font-family: "Pixelify Sans", sans-serif;
+  }
+    
+  .header-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--page-horizontal-padding);
+    min-width: 100%;
+    font-size: var(--font-size-small);
+  }
+  
+  .header-wrapper-home {
+    color: var(--navbar-text-color);
+    border-radius: var(--navbar-buttons-border-radius);
+    padding: 0.5rem 0.5rem;
+    background-color: var(--navbar-button-color);
+    text-decoration: none;
+    width: fit-content;
+    height: var(--navbar-button-height);
+    min-width: fit-content; /* Applying minimum width */
+    min-height: var(--navbar-button-height); /* Applying minimum height */
+    text-align: center;
+    align-content: center;
+    align-self: center;
+  }
+  
+  .header-wrapper-home:hover {
+    opacity: 0.5;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: var(--page-horizontal-padding);
+  }
+    
+  .navbar a {
+    color: var(--navbar-text-color);
+    /* margin-left: var(--spacing); */
+    border-radius: var(--navbar-buttons-border-radius);
+    padding: 0.5rem 0.5rem;
+    background-color: var(--navbar-button-color);
+    text-decoration: none;
+    width: fit-content;
+    align-content: center;
+    align-self: center;
+    text-align: center;
+    height: var(--navbar-button-height);
+    min-width: var(--navbar-button-width); /* Applying minimum width */
+    min-height: var(--navbar-button-height); /* Applying minimum height */
+  }
+  
+  .navbar a:hover {
+    opacity: 0.5;
+  }
+  
+  @media only screen and (max-width: 440px) {
+    .header-wrapper-home {
+      width: var(--navbar-button-height);
+      min-width: var(--navbar-button-height);
+      background-image: url('../../home.svg');
+      background-size: 30px 30px;
+      background-repeat: no-repeat;
+      background-position: center;
+      color: transparent;
+    }
+  }
+  @media only screen and (max-width: 344px) {
+    .header-wrapper-home {
+      min-width: 30px;
+    }
+    li.navbar a,
+    .header-wrapper a {
+      padding: 0.2rem 0.2rem;
+    }
+  }
+  
