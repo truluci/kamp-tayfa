@@ -1,14 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import indexRouter from './routers/index.js';
 import dotenv from 'dotenv';
+import indexRouter from './routers/index.js';
+import registerRouter from './routers/register.js';
+import loginRouter from './routers/login.js';
+import './db/mongoose.js';
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kamp-tayfa';
-
-mongoose.connect(MONGODB_URI);
 
 const app = express();
 
@@ -17,6 +17,10 @@ app.set('views', './views');
 
 app.use(express.static('public'));
 
+app.use(express.json());
+
+app.use('/register', registerRouter);
+app.use('/login', loginRouter);
 app.use('/', indexRouter);
 
 app.listen(PORT, () => {

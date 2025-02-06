@@ -1,0 +1,11 @@
+extends ../partials/header.pug
+block main 
+  h1= title
+    p Welcome to #{title}
+    p This is the login page
+  form(action='/auth/login' method='POST')
+    label(for='email') Email
+    input(type='email' name='email' id='email' required)
+    label(for='password') Password
+    input(type='password' name='password' id='password' required)
+    button(type='submit') Login

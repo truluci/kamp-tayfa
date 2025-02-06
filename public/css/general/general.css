@@ -3,7 +3,7 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Montserrat", serif;
   }
   
   input[type=search]::-ms-clear { display: none; width : 0; height: 0; }
@@ -34,10 +34,10 @@
   }
   
   :root {
-    --primary-bg-color: #387478;
-    --secondary-bg-color: #243642;
-    --button-bg-color: #629584;
-    --button-text-color: #fff;
+    --primary-bg-color: #1D1616;
+    --secondary-bg-color: #8E1616;
+    --button-bg-color: #D84040;
+    --button-text-color: #EEEEEE;
     --text-color: #fff;
     --text-color-highlight: #222020;
   

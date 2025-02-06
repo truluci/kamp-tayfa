@@ -1,6 +1,4 @@
 :root {
-    --navbar-text-color: #fff;
-    --navbar-button-color: #387478;
     --navbar-padding: 1.5rem;
     --navbar-button-spacing: 1.5rem;
     --navbar-buttons-border-radius: 0px;
@@ -10,8 +8,7 @@
   
   body {
     margin: 0;
-    background-color: #243642;
-    font-family: "Pixelify Sans", sans-serif;
+    background-color: var(--primary-bg-color);
   }
     
   .header-wrapper {
@@ -24,10 +21,10 @@
   }
   
   .header-wrapper-home {
-    color: var(--navbar-text-color);
+    color: var(--button-text-color);
     border-radius: var(--navbar-buttons-border-radius);
     padding: 0.5rem 0.5rem;
-    background-color: var(--navbar-button-color);
+    background-color: var(--button-bg-color);
     text-decoration: none;
     width: fit-content;
     height: var(--navbar-button-height);
@@ -50,11 +47,11 @@
   }
     
   .navbar a {
-    color: var(--navbar-text-color);
+    color: var(--button-text-color);
     /* margin-left: var(--spacing); */
     border-radius: var(--navbar-buttons-border-radius);
     padding: 0.5rem 0.5rem;
-    background-color: var(--navbar-button-color);
+    background-color: var(--button-bg-color);
     text-decoration: none;
     width: fit-content;
     align-content: center;
