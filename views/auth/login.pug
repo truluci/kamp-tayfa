@@ -3,7 +3,7 @@ block main
   h1= title
     p Welcome to #{title}
     p This is the login page
-  form(action='/auth/login' method='POST')
+  form(action=page method='POST')
     label(for='email') Email
     input(type='email' name='email' id='email' required)
     label(for='password') Password

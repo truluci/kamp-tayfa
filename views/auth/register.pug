@@ -3,11 +3,11 @@ block main
     h1= title
     p Welcome to #{title}
     p This is the register page
-    form(action='/auth/register' method='POST')
+    form(action=page method='POST')
+        label(for='name') Name
+        input(type='text' name='name' id='name' required)
         label(for='email') Email
         input(type='email' name='email' id='email' required)
         label(for='password') Password
         input(type='password' name='password' id='password' required)
-        label(for='password2') Confirm Password
-        input(type='password' name='password2' id='password2' required)
         button(type='submit') Register

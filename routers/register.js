@@ -1,9 +1,14 @@
 import { Router } from "express";
 
-import registerGetController from "../controllers/auth/register/get.js";
+import {renderRegister, register} from "../controllers/auth/register/get.js";
 
 const registerRouter = Router();
 
-registerRouter.get('/', registerGetController);
+registerRouter.get('/', 
+    renderRegister
+);
+registerRouter.post('/', 
+    register
+);
 
 export default registerRouter;

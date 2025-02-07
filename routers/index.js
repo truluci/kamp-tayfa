@@ -1,7 +1,7 @@
 import { Router } from "express";
-
+import { auth } from "../middleware/auth.js";
 import indexGetController from "../controllers/index/get.js";
-import memeGetController from "../controllers/memes/get.js";
+import { renderMemes, addMeme } from "../controllers/memes/get.js";
 
 const router = Router();
 
@@ -10,7 +10,12 @@ router.get('/',
 );
 
 router.get('/memes',
-  memeGetController
+  renderMemes
+);
+
+router.post('/memes',
+  auth,
+  addMeme
 );
 
 export default router;

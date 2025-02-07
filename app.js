@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import indexRouter from './routers/index.js';
 import registerRouter from './routers/register.js';
@@ -16,8 +15,8 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 
 app.use(express.static('public'));
-
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
