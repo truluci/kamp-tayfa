@@ -21,8 +21,12 @@ export const login = async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password);
     const token = await user.generateAuthToken();
-    localStorage.setItem('token', token);
-    res.send({ user: user, token });
+    // localStorage.setItem('token', token);
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+    }).send({ user: user, token });
   } catch (e) {
       res.status(400).send();
       console.log(e);

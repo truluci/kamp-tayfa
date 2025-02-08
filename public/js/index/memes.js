@@ -1,5 +1,6 @@
 // // Assuming the token is stored in localStorage after user login
-// const token = localStorage.getItem('userToken');
+// const token = localStorage.getItem('token');
+// console.log('Token:', token);
 
 // // Form submission event
 // const form = document.querySelector('#meme-upload-form');
@@ -11,7 +12,7 @@
 
 //     try {
 //         // Send the request with Authorization header
-//         const response = await fetch('https://localhost:3000/memes', {
+//         const response = await fetch('/memes', {
 //             method: 'POST',
 //             headers: {
 //                 'Authorization': `Bearer ${token}`, // Include token in Authorization header
