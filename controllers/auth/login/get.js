@@ -2,6 +2,7 @@ import { User } from '../../../models/user.js';
 // import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import localStorage from 'localStorage';
 
 export const renderLogin = (_req, res) => {
   res.render('auth/login', {
@@ -20,6 +21,7 @@ export const login = async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password);
     const token = await user.generateAuthToken();
+    localStorage.setItem('token', token);
     res.send({ user: user, token });
   } catch (e) {
       res.status(400).send();

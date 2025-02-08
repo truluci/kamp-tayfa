@@ -1,5 +1,16 @@
 extends ../partials/header.pug
 block main
-  h1= title
-  p Welcome to #{title}
-  p This is the memes page
+  h1 Upload a Meme
+  form(action='/memes' method='POST' id='meme-upload-form')
+    div
+      label(for='title') Title
+      input(type='text', name='title', id='title', required)
+    div
+      label(for='description') Description
+      textarea(name='description', id='description', required)
+    div
+      label(for='memeUrl') Meme URL
+      input(type='url', name='imageUrl', id='imageUrl', required)
+    div
+      button(type='submit') Upload Meme
+  

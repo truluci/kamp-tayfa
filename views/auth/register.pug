@@ -3,7 +3,7 @@ block main
     h1= title
     p Welcome to #{title}
     p This is the register page
-    form(action=page method='POST')
+    form(action='/register' method='POST')
         label(for='name') Name
         input(type='text' name='name' id='name' required)
         label(for='email') Email

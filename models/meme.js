@@ -11,9 +11,15 @@ const memeSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  image: {
-    type: Buffer
-  }
+  memeUrl: {
+    type: String,
+    required: true,
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
 }, {
   timestamps: true
 });

@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+// import cors from 'cors';
 import indexRouter from './routers/index.js';
 import registerRouter from './routers/register.js';
 import loginRouter from './routers/login.js';
@@ -14,6 +15,7 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+// app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
