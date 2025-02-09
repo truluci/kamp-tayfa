@@ -20,8 +20,8 @@ app.set('views', './views');
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
+
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/', indexRouter);

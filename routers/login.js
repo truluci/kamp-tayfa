@@ -10,9 +10,5 @@ loginRouter.get('/',
 loginRouter.post('/', 
     login
 );
-loginRouter.post('/', 
-    auth, 
-    logout
-);
 
 export default loginRouter;

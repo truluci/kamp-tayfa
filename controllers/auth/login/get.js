@@ -1,8 +1,4 @@
 import { User } from '../../../models/user.js';
-// import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import localStorage from 'localStorage';
 
 export const renderLogin = (_req, res) => {
   res.render('auth/login', {
@@ -14,8 +10,6 @@ export const renderLogin = (_req, res) => {
     }
   });
 };
-
-dotenv.config();
 
 export const login = async (req, res) => {
   try {
@@ -39,8 +33,8 @@ export const logout = async (req, res) => {
       return token.token !== req.token;
     });
     await req.user.save();
-    res.send();
+    res.clearCookie('token').redirect('/login');
   } catch (e) {
     res.status(500).send();
   }
-}
+};
