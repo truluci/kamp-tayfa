@@ -1,20 +1,16 @@
 extends ../partials/header.pug
 
 block main
-
   div.register-container
     h2 Register
-    form.register-form(action='/register', method='POST')
+    form.register-form(action='/auth/register', method='POST')
       div.input-group
         label(for='name') Name
         input#name(type='text', name='name', placeholder='Enter your name', required)
-
       div.input-group
         label(for='email') Email
         input#email(type='email', name='email', placeholder='Enter your email', required)
-
       div.input-group
         label(for='password') Password
         input#password(type='password', name='password', placeholder='Enter your password', required)
-
       button.register-button(type='submit') Register

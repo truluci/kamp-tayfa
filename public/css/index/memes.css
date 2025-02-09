@@ -1,13 +1,13 @@
 .memes-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--spacing);
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: var(--page-vertical-padding) 0;
-  }
-  
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--spacing);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--page-vertical-padding) 0;
+}
+
 .meme {
   background-color: var(--secondary-bg-color);
   border-radius: var(--border-radius-md);
@@ -103,14 +103,14 @@
   .meme {
     width: calc(50% - var(--spacing));
   }
-  
+
 }
 
 @media screen and (max-width: 690px) {
   .meme {
     width: 100%;
   }
-  
+
   #upload-form {
     width: 100%;
     top: calc(var(--page-vertical-padding) + var(--navbar-button-height) + 2 * var(--navbar-padding));

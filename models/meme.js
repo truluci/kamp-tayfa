@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const memeSchema = new mongoose.Schema({
   title: {
@@ -18,10 +18,16 @@ const memeSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: 'User',
   },
 }, {
   timestamps: true
 });
 
-export const Meme = mongoose.model("Meme", memeSchema);
+memeSchema.statics.createMeme = function (data, callback) {
+  // TODO: implement
+};
+
+// TODO: move all logic here, only call one static function from controllers
+
+export const Meme = mongoose.model('Meme', memeSchema);

@@ -2,9 +2,6 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
-dotenv.config({ path: "./config/.env" });
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -94,10 +91,9 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 }
 
-// 
 userSchema.pre("save", async function(next) {
   const user = this;
-  if(user.isModified("password")) {
+  if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
   }
   next();

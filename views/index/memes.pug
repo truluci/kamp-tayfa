@@ -1,16 +1,13 @@
 extends ../partials/header.pug
 
 block main
-
   button#toggle-upload-button ekle
-
   div.memes-container
     each meme in memes
       div.meme
         a(href=meme.memeUrl target='_blank') burdan görebilirsin
         h2= meme.title
         p= meme.description
-
     form.hidden#upload-form(action='/memes' method='POST')
       div
         label(for='title') Title

@@ -1,16 +1,13 @@
 extends ../partials/header.pug
 
 block main
-
   div.login-container
     h2 Login
-    form.login-form(action='/login', method='POST')
+    form.login-form(action='/auth/login', method='POST')
       div.input-group
         label(for='email') Email
         input#email(type='email', name='email', placeholder='Enter your email', required)
-
       div.input-group
         label(for='password') Password
         input#password(type='password', name='password', placeholder='Enter your password', required)
-
       button.login-button(type='submit') Login

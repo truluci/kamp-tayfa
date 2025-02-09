@@ -1,7 +1,10 @@
-import { Router } from "express";
-import { auth } from "../middleware/auth.js";
-import indexGetController from "../controllers/index/get.js";
-import { renderMemes, addMeme } from "../controllers/memes/get.js";
+import { Router } from 'express';
+
+import isAuth from '../middleware/isAuth.js';
+
+import indexGetController from '../controllers/index/get.js';
+import memesGetController from '../controllers/memes/get.js';
+import memesPostController from '../controllers/memes/post.js';
 
 const router = Router();
 
@@ -10,13 +13,13 @@ router.get('/',
 );
 
 router.get('/memes',
-  auth,
-  renderMemes
+  isAuth,
+  memesGetController
 );
 
 router.post('/memes',
-  auth,
-  addMeme
+  isAuth,
+  memesPostController
 );
 
 export default router;
