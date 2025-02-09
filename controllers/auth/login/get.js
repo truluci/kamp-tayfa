@@ -26,9 +26,9 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: 'strict',
-    }).send({ user: user, token });
+    }).redirect('/memes');
   } catch (e) {
-      res.status(400).send();
+      res.status(400).redirect('/login');
       console.log(e);
   }
 };

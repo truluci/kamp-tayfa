@@ -1,10 +1,61 @@
-:root {
-    --body-wrapper-height: 80vh;
-    --body-wrapper-bg-color: #387478;
-    --button-bg-color: #629584;
-    --input-bg-color: #E2F1E7;
-    --button-text-color: #fff;
-    --text-color: #fff;
-    --button-width: 6rem;
-  }
-  
+.options-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing);
+  padding: var(--page-vertical-padding) var(--page-horizontal-padding);
+  background-color: var(--secondary-bg-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.option-login,
+.option-register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--button-spacing);
+  padding: var(--page-vertical-padding);
+  border-radius: var(--border-radius-md);
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.option-login h2,
+.option-register h2 {
+  font-size: var(--font-size-large);
+  color: var(--text-color-highlight);
+  margin-bottom: var(--spacing);
+}
+
+.option-login p,
+.option-register p {
+  font-size: var(--font-size-medium);
+  color: var(--text-color);
+  margin-bottom: var(--button-spacing);
+}
+
+a.button-login,
+a.button-register {
+  display: inline-block;
+  font-size: var(--font-size-medium);
+  color: var(--button-text-color);
+  background-color: var(--button-bg-color);
+  text-decoration: none;
+  padding: var(--button-padding);
+  border-radius: var(--border-radius-sm);
+  min-width: var(--button-min-width);
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+a.button-login:hover,
+a.button-register:hover {
+  background-color: var(--primary-bg-color);
+}

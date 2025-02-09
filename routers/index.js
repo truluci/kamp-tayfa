@@ -10,6 +10,7 @@ router.get('/',
 );
 
 router.get('/memes',
+  auth,
   renderMemes
 );
 

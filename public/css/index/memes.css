@@ -1,0 +1,120 @@
+.memes-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing);
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--page-vertical-padding) 0;
+  }
+  
+.meme {
+  background-color: var(--secondary-bg-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--page-vertical-padding);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: calc(33.333% - var(--spacing));
+  min-height: 350px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.meme img {
+  max-width: 100%;
+  border-radius: var(--border-radius-sm);
+}
+
+#toggle-upload-button {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  font-size: var(--font-size-medium);
+  padding: var(--button-padding);
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  margin: var(--spacing) auto;
+  display: block;
+  position: fixed;
+  bottom: var(--page-vertical-padding);
+  right: calc(var(--page-horizontal-padding) + var(--spacing));
+  z-index: 10;
+}
+
+#toggle-upload-button:hover {
+  background-color: var(--primary-bg-color);
+}
+
+.hidden {
+  display: none;
+  opacity: 0.5;
+}
+
+#upload-form {
+  position: absolute;
+  top: calc(var(--page-vertical-padding) + var(--navbar-button-height) + 2 * var(--navbar-padding));
+  right: var(--page-horizontal-padding);
+  width: 300px;
+  background-color: var(--secondary-bg-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--page-vertical-padding);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  z-index: 10;
+  opacity: 0.8;
+}
+
+#upload-form div {
+  margin-bottom: var(--spacing);
+}
+
+#upload-form label {
+  font-size: var(--font-size-medium);
+  color: var(--text-color-highlight);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+#upload-form input,
+#upload-form textarea,
+#upload-form button {
+  width: 100%;
+  font-size: var(--font-size-medium);
+  padding: var(--button-padding);
+  border-radius: var(--border-radius-sm);
+}
+
+#upload-form input,
+#upload-form textarea {
+  border: 1px solid var(--text-color);
+}
+
+#upload-form button {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: none;
+  cursor: pointer;
+}
+
+#upload-form button:hover {
+  background-color: var(--primary-bg-color);
+}
+
+@media screen and (max-width: 1000px) {
+  .meme {
+    width: calc(50% - var(--spacing));
+  }
+  
+}
+
+@media screen and (max-width: 690px) {
+  .meme {
+    width: 100%;
+  }
+  
+  #upload-form {
+    width: 100%;
+    top: calc(var(--page-vertical-padding) + var(--navbar-button-height) + 2 * var(--navbar-padding));
+    right: 0;
+    padding: var(--page-vertical-padding) var(--page-horizontal-padding);
+  }
+}

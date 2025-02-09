@@ -1,16 +1,25 @@
 extends ../partials/header.pug
+
 block main
-  h1 Upload a Meme
-  form(action='/memes' method='POST' id='meme-upload-form')
-    div
-      label(for='title') Title
-      input(type='text', name='title', id='title', required)
-    div
-      label(for='description') Description
-      textarea(name='description', id='description', required)
-    div
-      label(for='memeUrl') Meme URL
-      input(type='url', name='memeUrl', id='memeUrl', required)
-    div
-      button(type='submit') Upload Meme
-  
+
+  button#toggle-upload-button ekle
+
+  div.memes-container
+    each meme in memes
+      div.meme
+        a(href=meme.memeUrl target='_blank') burdan görebilirsin
+        h2= meme.title
+        p= meme.description
+
+    form.hidden#upload-form(action='/memes' method='POST')
+      div
+        label(for='title') Title
+        input(type='text', name='title', id='title', required)
+      div
+        label(for='description') Description
+        textarea(name='description', id='description', required)
+      div
+        label(for='memeUrl') Meme URL
+        input(type='url', name='memeUrl', id='memeUrl', required)
+      div
+        button(type='submit') Upload Meme

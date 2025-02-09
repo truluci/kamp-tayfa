@@ -1,5 +1,12 @@
 extends ../partials/header.pug
+
 block main
-  h1= title
-  p Welcome to #{title}
-  p This is the index page
+
+  div.options-container
+    div.option-login
+      h2 Login
+      a.button-login(href='/login') Login
+
+    div.option-register
+      h2 Register
+      a.button-register(href='/register') Register

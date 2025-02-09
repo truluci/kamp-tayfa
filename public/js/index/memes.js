@@ -1,33 +1,14 @@
-// // Assuming the token is stored in localStorage after user login
-// const token = localStorage.getItem('token');
-// console.log('Token:', token);
-
-// // Form submission event
-// const form = document.querySelector('#meme-upload-form');
-// form.addEventListener('submit', async (event) => {
-//     event.preventDefault();
-
-//     // Get form data (you may need to collect form fields like meme image, title, etc.)
-//     const formData = new FormData(form);
-
-//     try {
-//         // Send the request with Authorization header
-//         const response = await fetch('/memes', {
-//             method: 'POST',
-//             headers: {
-//                 'Authorization': `Bearer ${token}`, // Include token in Authorization header
-//             },
-//             body: formData, // Attach form data (file and other fields)
-//         });
-
-//         const result = await response.json();
-
-//         if (response.ok) {
-//             console.log('Meme uploaded successfully', result);
-//         } else {
-//             console.error('Error uploading meme:', result);
-//         }
-//     } catch (error) {
-//         console.error('Request failed:', error);
-//     }
-// });
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('toggle-upload-button');
+    const uploadForm = document.getElementById('upload-form');
+  
+    toggleButton.addEventListener('click', () => {
+      if (uploadForm.classList.contains('hidden')) {
+        uploadForm.classList.remove('hidden');
+      } else {
+        uploadForm.classList.add('hidden');
+      }
+    });
+  });
+  
+  

@@ -21,8 +21,12 @@ export const register = async (req, res) => {
   try {
       await user.save();
       const token = await user.generateAuthToken();
-      res.status(201).send({user, token});
+      res.status(201).cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+      }).redirect('/memes');
   } catch (e) {
-      res.status(400).send(e);
+      res.status(400).redirect('/register');
   }
 }

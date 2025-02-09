@@ -2,8 +2,8 @@
     --navbar-padding: 1.5rem;
     --navbar-button-spacing: 1.5rem;
     --navbar-buttons-border-radius: 0px;
-    --navbar-button-width: 5rem; /* Minimum width for navbar buttons */
-    --navbar-button-height: 2.5rem; /* Minimum height for navbar buttons */
+    --navbar-button-width: 7rem; /* Minimum width for navbar buttons */
+    --navbar-button-height: 3rem; /* Minimum height for navbar buttons */
   }
   
   body {
@@ -18,11 +18,19 @@
     gap: var(--page-horizontal-padding);
     min-width: 100%;
     font-size: var(--font-size-small);
+    /* fixed position on the window */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: calc(var(--navbar-button-height) + 2 * var(--navbar-padding));
+    min-height: calc(var(--navbar-button-height) + 2 * var(--navbar-padding));
+    padding: var(--page-vertical-padding) var(--page-horizontal-padding);
+    z-index: 1000;    
   }
   
   .header-wrapper-home {
-    color: var(--button-text-color);
-    border-radius: var(--navbar-buttons-border-radius);
+    color: var(--text-color);
+    border-radius: var(--border-radius-lg);
     padding: 0.5rem 0.5rem;
     background-color: var(--button-bg-color);
     text-decoration: none;
@@ -36,7 +44,7 @@
   }
   
   .header-wrapper-home:hover {
-    opacity: 0.5;
+    opacity: 0.7;
   }
   
   .navbar {
@@ -47,9 +55,9 @@
   }
     
   .navbar a {
-    color: var(--button-text-color);
+    color: var(--text-color);
     /* margin-left: var(--spacing); */
-    border-radius: var(--navbar-buttons-border-radius);
+    border-radius: var(--border-radius-lg);
     padding: 0.5rem 0.5rem;
     background-color: var(--button-bg-color);
     text-decoration: none;
