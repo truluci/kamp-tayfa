@@ -24,9 +24,10 @@ const memeSchema = new mongoose.Schema({
   timestamps: true
 });
 
-memeSchema.statics.createMeme = function (data, callback) {
-  // TODO: implement
-};
+memeSchema.statics.addMeme = function(meme) {
+  const newMeme = new Meme(meme);
+  return newMeme.save();
+}
 
 // TODO: move all logic here, only call one static function from controllers
 

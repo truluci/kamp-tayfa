@@ -3,8 +3,8 @@ import { Meme } from '../../models/meme.js';
 export default (_req, res) => {
   Meme.find({})
     .then(memes => {
-      return res.render('index/memes', {
-        page: 'index/memes',
+      return res.render('memes/memes', {
+        page: 'memes/memes',
         title: 'memes',
         includes: {
           js: ['page'],

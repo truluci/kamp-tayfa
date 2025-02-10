@@ -65,31 +65,39 @@ userSchema.methods.toJSON = function() {
   return userObject;
 }
 
-userSchema.methods.generateAuthToken = async function() {
-  const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
-
-  return token;
-}
-
-userSchema.statics.findByCredentials = async (email, password) => {
+userSchema.statics.loginAndGenerateToken = async (email, password) => {
   const user = await User.findOne({ email });
 
-  if(!user) {
+  if (!user) {
     throw new Error("Unable to login");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
-  if(!isMatch) {
+  if (!isMatch) {
     throw new Error("Unable to login");
   }
 
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return { user, token };
+};
+
+userSchema.statics.logout = async function (userId, token) {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  user.tokens = user.tokens.filter((userToken) => userToken.token !== token);
+  await user.save();
+
   return user;
-}
+};
 
 userSchema.pre("save", async function(next) {
   const user = this;

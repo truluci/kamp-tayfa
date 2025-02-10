@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 
 import indexRouter from './routers/index.js';
 import authRouter from './routers/auth.js';
+import memesRouter from './routers/memes.js';
 
 await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/kamp-tayfa');
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use('/memes', memesRouter)
 app.use('/auth', authRouter);
 app.use('/', indexRouter);
 

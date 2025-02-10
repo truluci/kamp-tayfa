@@ -1,12 +1,15 @@
-export default (req, res) => {
-  req.user.tokens = req.user.tokens
-    .filter(token => token.token !== req.token);
+import { User } from "../../../models/user.js";
 
-  req.user.save()
-    .then(() => {
-      return res.clearCookie('token').redirect('/auth/login');
-    })
-    .catch(() => {
-      return res.status(500).send();
-    });
+export default (req, res) => {
+  if (!req.user || !req.token)
+    return res.status(401).redirect('/auth/login');
+
+  User.logout(req.user._id, req.token)
+  .then(() => {
+    res.clearCookie('token').redirect('/auth/login');
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send({ error: "Logout failed" });
+  });
 };
