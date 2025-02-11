@@ -29,6 +29,4 @@ memeSchema.statics.addMeme = function(meme) {
   return newMeme.save();
 }
 
-// TODO: move all logic here, only call one static function from controllers
-
 export const Meme = mongoose.model('Meme', memeSchema);

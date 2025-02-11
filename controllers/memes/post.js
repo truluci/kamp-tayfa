@@ -15,11 +15,6 @@ export default (req, res) => {
       return res.send({
         success: true,
         message: 'Meme added successfully',
-        meme: {
-          title: req.body.title,
-          description: req.body.description,
-          memeUrl: req.body.memeUrl,
-        }
       });
     })
     .catch((err) => {

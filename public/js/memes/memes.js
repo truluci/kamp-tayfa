@@ -6,13 +6,10 @@ window.addEventListener('load', () => {
       uploadForm.classList.toggle('hidden');
     };
   });
-});
 
-//when new meme added from the backend refresh the page after post request sent
-window.addEventListener('load', () => {
-  const uploadForm = document.getElementById('upload-form');
+  document.addEventListener('submit', (event) => {
+    if (!event.target.closest('#upload-form')) return;
 
-  uploadForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const formData = new FormData(uploadForm);

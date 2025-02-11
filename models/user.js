@@ -65,6 +65,18 @@ userSchema.methods.toJSON = function() {
   return userObject;
 }
 
+// TODO: callbackify
+
+userSchema.statics.registerUserAndGenerateToken = async (name, email, password) => {
+  const user = new User({ name, email, password });
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return { user, token };
+};
+
 userSchema.statics.loginAndGenerateToken = async (email, password) => {
   const user = await User.findOne({ email });
 

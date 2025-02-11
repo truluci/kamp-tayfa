@@ -1,24 +1,27 @@
 import { User } from '../../../models/user.js';
 
-// TODO: post requests shouldn't render or redirect, they should return json, frontend should handle the response
-
 export default (req, res) => {
   if (!req.body.email || typeof req.body.email !== 'string' || !req.body.password || typeof req.body.password !== 'string')
-    return res.status(400).redirect('/auth/register');
+    return res.status(400).send({
+      success: false,
+      error: 'Invalid request',
+    });
 
-  const user = new User(req.body);
-
-  user.save()
-    .then(user.generateAuthToken)
-    .then(token => {
-      return res.cookie('token', token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'strict',
-      }).redirect('/memes');
+  User.registerUserAndGenerateToken(req.body.name, req.body.email, req.body.password)
+    .then(({ user, token }) => {
+      res.cookie('auth_token', token);
+      res.status(201).send({ 
+        success: true,
+        message: 'User registered successfully',
+        user, 
+        token,
+       });
     })
-    .catch(err => {
-      console.error(err);
-      return res.redirect('/auth/register');
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send({
+        success: false,
+        error: error.message,
+      });
     });
 };
