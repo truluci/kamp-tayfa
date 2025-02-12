@@ -67,56 +67,46 @@ userSchema.methods.toJSON = function() {
 
 // TODO: callbackify
 
-userSchema.statics.registerUserAndGenerateToken = async (name, email, password) => {
+userSchema.statics.registerUserAndGenerateToken = function (name, email, password) {
   const user = new User({ name, email, password });
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
 
   user.tokens = user.tokens.concat({ token });
-  await user.save();
-
-  return { user, token };
+  return user.save().then(() => ({ user, token }));
 };
 
-userSchema.statics.loginAndGenerateToken = async (email, password) => {
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    throw new Error("Unable to login");
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    throw new Error("Unable to login");
-  }
-
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
-
-  return { user, token };
+userSchema.statics.loginAndGenerateToken = function (email, password) {
+  return User.findOne({ email }).then((user) => {
+    if (!user) {
+      throw new Error("Unable to login");
+    }
+    return bcrypt.compare(password, user.password).then((isMatch) => {
+      if (!isMatch) {
+        throw new Error("Unable to login");
+      }
+      const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+      user.tokens = user.tokens.concat({ token });
+      return user.save().then(() => ({ user, token }));
+    });
+  });
 };
 
-userSchema.statics.logout = async function (userId, token) {
-  const user = await User.findById(userId);
+userSchema.statics.logoutAndRemoveToken = function (user, token) {
+  user.tokens = user.tokens.filter((t) => t.token !== token);
+  return user.save();
+}
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  user.tokens = user.tokens.filter((userToken) => userToken.token !== token);
-  await user.save();
-
-  return user;
-};
-
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", function (next) {
   const user = this;
   if (user.isModified("password")) {
-    user.password = await bcrypt.hash(user.password, 8);
+    bcrypt.hash(user.password, 8).then((hashedPassword) => {
+      user.password = hashedPassword;
+      next();
+    }).catch((err) => next(err));
+  } else {
+    next();
   }
-  next();
 });
+
 
 export const User = mongoose.model("User", userSchema);

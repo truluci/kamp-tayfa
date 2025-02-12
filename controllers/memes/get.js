@@ -1,6 +1,6 @@
 import { Meme } from '../../models/meme.js';
 
-export default (_req, res) => {
+export default (req, res) => {
   Meme.find({})
     .then(memes => {
       return res.render('memes/memes', {
@@ -10,7 +10,9 @@ export default (_req, res) => {
           js: ['page'],
           css: ['header', 'page', 'general']
         },
-        memes
+        memes,
+        user: req.user,
+        token: req.token
       });
     })
     .catch(err => {

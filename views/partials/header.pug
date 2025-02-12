@@ -5,5 +5,13 @@ block content
     li.navbar
       a(href='/memes') wiki
       a(href='mailto:merits.septets_06@icloud.com') iletişim
+      //- post request to /auth/logout values user and token
+      if user
+        form(action='/auth/logout' method='post')
+          input(type='hidden' name='user' value=user)
+          input(type='hidden' name='token' value=token)
+          button(type='submit') çıkış yap
+      else
+        a(href='/auth/login') giriş yap
   block main
   //- include ../partials/footer.pug

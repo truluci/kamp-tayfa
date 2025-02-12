@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import isAuth from '../middleware/isAuth.js';
 import loginGetController from '../controllers/auth/login/get.js';
 import loginPostController from '../controllers/auth/login/post.js';
 import logoutPostController from '../controllers/auth/logout/post.js';
@@ -16,6 +17,7 @@ authRouter.post('/login',
 );
 
 authRouter.post('/logout',
+  isAuth,
   logoutPostController
 );
 
