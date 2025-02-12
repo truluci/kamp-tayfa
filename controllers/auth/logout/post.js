@@ -1,5 +1,7 @@
 import { User } from "../../../models/user.js";
 
+// TODO: destroy session
+
 export default (req, res) => {
   if (!req.user || !req.token)
     return res.status(401).send({ error: "Unauthorized" });

@@ -24,9 +24,9 @@ const memeSchema = new mongoose.Schema({
   timestamps: true
 });
 
-memeSchema.statics.addMeme = function(meme) {
+memeSchema.statics.createMeme = function(meme) {
   const newMeme = new Meme(meme);
   return newMeme.save();
-}
+};
 
 export const Meme = mongoose.model('Meme', memeSchema);

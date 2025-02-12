@@ -1,14 +1,20 @@
 import { Meme } from '../../models/meme.js';
 
 export default (req, res) => {
-  if (!req.body.title || typeof req.body.title !== 'string' || !req.body.description || typeof req.body.description !== 'string' || !req.body.memeUrl || typeof req.body.memeUrl !== 'string')
+  if (
+    !req.body.title || typeof req.body.title !== 'string' ||
+    !req.body.description || typeof req.body.description !== 'string' ||
+    !req.body.memeUrl || typeof req.body.memeUrl !== 'string'
+  )
     return res.send({
       success: false,
       error: 'Invalid input'
     });
 
-  Meme.addMeme({
-    ...req.body,
+  Meme.createMeme({
+    title: req.body.title,
+    description: req.body.description,
+    memeUrl: req.body.memeUrl,
     owner: req.user._id,
   })
     .then(() => {

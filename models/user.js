@@ -63,17 +63,40 @@ userSchema.methods.toJSON = function() {
   delete userObject.avatar;
 
   return userObject;
-}
+};
 
-// TODO: callbackify
+userSchema.statics.registerUserAndGenerateToken = function (data, callback) {
+  if (!data || typeof data !== 'object')
+    return callback('bad_request');
 
-userSchema.statics.registerUserAndGenerateToken = function (name, email, password) {
-  const user = new User({ name, email, password });
+  if (!data.email || typeof data.email !== 'string' || !validator.isEmail(data.email))
+    return callback('bad_request');
+
+  if (!data.password || typeof data.password !== 'string' || data.password.length < 7 || data.password.toLowerCase().includes('password'))
+    return callback('bad_request');
+
+  if (!data.name || typeof data.name !== 'string')
+    return callback('bad_request');
+
+  const user = new User({
+    name: data.name,
+    email: data.email,
+    password: data.password
+  });
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
 
   user.tokens = user.tokens.concat({ token });
-  return user.save().then(() => ({ user, token }));
+
+  user
+    .save()
+    .then(() => callback(null, { user, token }))
+    .catch(err => {
+      console.error(err);
+      return callback('database_error')
+    });
 };
+
+// TODO: callbackify
 
 userSchema.statics.loginAndGenerateToken = function (email, password) {
   return User.findOne({ email }).then((user) => {
@@ -94,18 +117,23 @@ userSchema.statics.loginAndGenerateToken = function (email, password) {
 userSchema.statics.logoutAndRemoveToken = function (user, token) {
   user.tokens = user.tokens.filter((t) => t.token !== token);
   return user.save();
-}
+};
 
 userSchema.pre("save", function (next) {
   const user = this;
-  if (user.isModified("password")) {
-    bcrypt.hash(user.password, 8).then((hashedPassword) => {
+
+  if (!user.isModified("password"))
+    return next();
+
+  bcrypt.hash(user.password, 8)
+    .then((hashedPassword) => {
       user.password = hashedPassword;
-      next();
-    }).catch((err) => next(err));
-  } else {
-    next();
-  }
+      return next();
+    })
+    .catch(err => {
+      console.error(err);
+      return next(err);
+    });
 });
 
 
