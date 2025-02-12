@@ -9,13 +9,15 @@ export default (req, res) => {
 
   User.registerUserAndGenerateToken(req.body.name, req.body.email, req.body.password)
     .then(({ user, token }) => {
-      res.cookie('auth_token', token);
-      res.status(201).send({ 
-        success: true,
-        message: 'User registered successfully',
-        user, 
-        token,
-       });
+      res
+        .cookie('auth_token', token)
+        .status(201)
+        .send({
+          success: true,
+          message: 'User registered successfully',
+          user,
+          token,
+        });
     })
     .catch((error) => {
       console.error(error);

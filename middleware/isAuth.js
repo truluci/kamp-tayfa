@@ -30,3 +30,38 @@ export default (req, res, next) => {
       });
   });
 };
+
+// TODO: change authentication logic to server-side cookie and express-session
+
+// // isAuth.js
+
+// const Admin = require('../models/admin/Admin');
+
+// module.exports = (req, res, next) => {
+//   if (req.session && req.session.admin)
+//     Admin.findAdminByIdAndFormat(req.session.admin._id, (err, admin) => {
+//       if (err) return res.status(401).redirect('/auth/login');
+
+//       req.session.admin = admin;
+//       return next();
+//     });
+// };
+
+
+// // ----------------
+
+// // login.js
+
+// module.exports = (req, res) => {
+//   Admin.findAdminByEmailAndVerifyPassword(req.body, (err, admin) => {
+//     if (err) {
+//       res.write(JSON.stringify({ error: err, success: false }));
+//       return res.end();
+//     }
+
+//     req.session.admin = admin;
+
+//     res.write(JSON.stringify({ redirect: req.session.redirect, success: true }));
+//     return res.end();
+//   });
+// };
