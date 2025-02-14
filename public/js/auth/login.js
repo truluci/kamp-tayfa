@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
         .then(response => response.json())
         .then(result => {
           if (result.success)
-            return window.location = '/memes';
+            return window.location.href = '/memes';
 
           alert(result.error);
         })

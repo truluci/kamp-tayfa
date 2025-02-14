@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import validator from "validator";
-import bcrypt from "bcryptjs";
+import mongoose from 'mongoose';
+import validator from 'validator';
+import bcrypt from 'bcryptjs';
 
 const PASSWORD_MIN_LENGTH = 7;
 
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate(value) {
       if(!validator.isEmail(value)) {
-        throw new Error("Email is invalid");
+        throw new Error('Email is invalid');
       }
     }
   },
@@ -28,8 +28,8 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minlength: PASSWORD_MIN_LENGTH,
     validate(value) {
-      if(value.toLowerCase().includes("password")) {
-        throw new Error("Password cannot contain 'password'");
+      if(value.toLowerCase().includes('password')) {
+        throw new Error('Password cannot contain \'password\'');
       }
     }
   },
@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     default: 0,
     validate(value) {
       if(value < 0) {
-        throw new Error("Age must be a positive number");
+        throw new Error('Age must be a positive number');
       }
     }
   },
@@ -65,11 +65,24 @@ userSchema.methods.toJSON = function() {
   return userObject;
 };
 
+userSchema.pre('save', function (next) {
+  if (this.isModified('password'))
+    bcrypt.hash(this.password, 8)
+      .then(hash => {
+        this.password = hash;
+        return next();
+      })
+      .catch(err => {
+        console.error(err);
+        return next('database_error');
+      });
+});
+
 userSchema.statics.findUserById = function(id, callback) {
-  if (!id || typeof id !== 'string' || validator.isMongoId(id))
+  if (!id || typeof id !== 'string' || !validator.isMongoId(id))
     return callback('bad_request');
 
-  User.findById(id)
+  User.findById(new mongoose.Types.ObjectId(id))
     .then(user => callback(null, user))
     .catch(err => {
       console.error(err);

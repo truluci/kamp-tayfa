@@ -13,8 +13,7 @@ export default (req, res) => {
           css: ['header', 'page', 'general']
         },
         memes,
-        user: req.user,
-        token: req.token
+        user: req.user
       });
     })
     .catch(err => {
