@@ -4,7 +4,6 @@ import isAuth from '../middleware/isAuth.js';
 
 import indexGetController from '../controllers/index/get.js';
 
-
 const router = Router();
 
 router.get('/',

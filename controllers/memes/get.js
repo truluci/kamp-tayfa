@@ -1,7 +1,9 @@
 import { Meme } from '../../models/meme.js';
 
 export default (req, res) => {
-  Meme.find({})
+  // TODO: static function
+
+  Meme.find()
     .then(memes => {
       return res.render('memes/memes', {
         page: 'memes/memes',

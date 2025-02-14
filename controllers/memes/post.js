@@ -6,19 +6,19 @@ export default (req, res) => {
     !req.body.description || typeof req.body.description !== 'string' ||
     !req.body.memeUrl || typeof req.body.memeUrl !== 'string'
   )
-    return res.send({
+    return res.status(400).json({
       success: false,
-      error: 'Invalid input'
+      error: 'bad_input'
     });
 
   Meme.createMeme({ ...req.body, owner: req.user._id }, (err, meme) => {
     if (err)
-      return res.send({
+      return res.status(400).json({
         success: false,
-        error: 'Meme creation failed'
+        error: 'Meme creation failed' // TODO: standardize error messages
       });
 
-    return res.send({
+    return res.status(200).json({
       success: true,
       message: 'Meme created successfully',
       meme,

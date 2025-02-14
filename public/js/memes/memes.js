@@ -24,11 +24,10 @@ window.addEventListener('load', () => {
     })
       .then(response => response.json())
       .then(result => {
-        if (result.success) {
-          window.location.reload();
-        } else {
-          alert(result.error);
-        }
+        if (result.success)
+          return window.location.reload();
+
+        alert(result.error);
       })
       .catch(err => {
         console.error(err);

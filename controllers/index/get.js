@@ -1,12 +1,12 @@
 export default (req, res) => {
-  res.render('index', {
+  return res.render('index', {
     page: 'index/index',
     title: 'kamp tayfa',
     includes: {
       js: ['page'],
       css: ['header', 'page', 'general']
     },
-    // user: req.user,
+    user: req.user,
     // token: req.token
   });
 };

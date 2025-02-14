@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 
+const PASSWORD_MIN_LENGTH = 7;
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -24,7 +26,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 7,
+    minlength: PASSWORD_MIN_LENGTH,
     validate(value) {
       if(value.toLowerCase().includes("password")) {
         throw new Error("Password cannot contain 'password'");
@@ -54,8 +56,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.toJSON = function() {
-  const user = this;
-  const userObject = user.toObject();
+  const userObject = this.toObject();
 
   delete userObject.password;
   delete userObject.tokens;
@@ -64,35 +65,44 @@ userSchema.methods.toJSON = function() {
   return userObject;
 };
 
-userSchema.statics.registerUser = function (data, callback) {
-  if (!data || typeof data !== 'object')
+userSchema.statics.findUserById = function(id, callback) {
+  if (!id || typeof id !== 'string' || validator.isMongoId(id))
     return callback('bad_request');
 
-  if (!data.email || typeof data.email !== 'string' || !validator.isEmail(data.email))
-    return callback('bad_request');
-
-  if (!data.password || typeof data.password !== 'string' || data.password.length < 7 || data.password.toLowerCase().includes('password'))
-    return callback('bad_request');
-
-  if (!data.name || typeof data.name !== 'string')
-    return callback('bad_request');
-
-  const user = new User({
-    name: data.name,
-    email: data.email,
-    password: data.password
-  });
-
-  user
-    .save()
-    .then(() => callback(null, user))
+  User.findById(id)
+    .then(user => callback(null, user))
     .catch(err => {
       console.error(err);
       return callback('database_error');
     });
 };
 
-userSchema.statics.login = function (data, callback) {
+userSchema.statics.createUser = function (data, callback) {
+  if (!data || typeof data !== 'object')
+    return callback('bad_request');
+
+  if (!data.email || typeof data.email !== 'string' || !validator.isEmail(data.email))
+    return callback('bad_request');
+
+  if (!data.password || typeof data.password !== 'string' || data.password.length < PASSWORD_MIN_LENGTH)
+    return callback('bad_request');
+
+  if (!data.name || typeof data.name !== 'string')
+    return callback('bad_request');
+
+  User.create({
+    name: data.name,
+    email: data.email,
+    password: data.password
+  })
+    .then(user => callback(null, user))
+    .catch(err => {
+      console.error(err);
+      return callback('database_error');
+    });
+};
+
+userSchema.statics.authenticateUser = function (data, callback) {
   if (!data || typeof data !== 'object')
     return callback('bad_request');
 
@@ -123,4 +133,4 @@ userSchema.statics.login = function (data, callback) {
     });
 };
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model('User', userSchema);

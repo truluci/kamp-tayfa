@@ -1,12 +1,12 @@
 import { User } from '../../../models/user.js';
 
 export default (req, res) => {
-  User.registerUser(req.body, (err, user) => {
-    if (err) {
-      return res.status(400).send({ success: false, error: err });
-    }
+  User.createUser(req.body, (err, user) => {
+    if (err)
+      return res.status(400).json({ success: false, error: err });
 
-    req.session.userId = user._id; // Store session after successful registration
-    return res.send({ success: true, message: "Registration successful", user });
+    req.session.userId = user._id;
+
+    return res.status(200).json({ success: true, message: "Registration successful", user });
   });
 };

@@ -37,6 +37,8 @@ memeSchema.statics.createMeme = function(data, callback) {
   if (!data.memeUrl || typeof data.memeUrl !== 'string')
     return callback('bad_request');
 
+  // TODO: use static create function instead of the method
+
   const meme = new Meme({
     title: data.title,
     description: data.description,
@@ -51,6 +53,10 @@ memeSchema.statics.createMeme = function(data, callback) {
       console.error(err);
       return callback('database_error');
     });
+};
+
+memeSchema.statics.findMemesByFilters = function(data, callback) {
+  // TODO: implement
 };
 
 export const Meme = mongoose.model('Meme', memeSchema);
