@@ -1,12 +1,12 @@
 import { User } from "../../../models/user.js";
 
-// TODO: destroy session
-
 export default (req, res) => {
-  if (!req.user || !req.token)
-    return res.status(401).send({ error: "Unauthorized" });
-
-  User.logoutAndRemoveToken(req.user, req.token)
-    .then(() => res.clearCookie("token").redirect("/"))
-    .catch((error) => res.status(500).send({ error: error.message }));
+  req.session.destroy(err => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send({ success: false, error: "Logout failed" });
+    }
+    res.clearCookie('connect.sid');
+    return res.redirect('/');
+  });
 };

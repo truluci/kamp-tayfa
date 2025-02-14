@@ -11,23 +11,17 @@ export default (req, res) => {
       error: 'Invalid input'
     });
 
-  Meme.createMeme({
-    title: req.body.title,
-    description: req.body.description,
-    memeUrl: req.body.memeUrl,
-    owner: req.user._id,
-  })
-    .then(() => {
-      return res.send({
-        success: true,
-        message: 'Meme added successfully',
-      });
-    })
-    .catch((err) => {
-      console.error(err);
+  Meme.createMeme({ ...req.body, owner: req.user._id }, (err, meme) => {
+    if (err)
       return res.send({
         success: false,
-        error: 'Internal server error'
+        error: 'Meme creation failed'
       });
+
+    return res.send({
+      success: true,
+      message: 'Meme created successfully',
+      meme,
     });
+  });
 };

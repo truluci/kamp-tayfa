@@ -23,7 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, httpOnly: true, sameSite: 'strict' }
 }));
+
 
 app.use('/memes', memesRouter)
 app.use('/auth', authRouter);

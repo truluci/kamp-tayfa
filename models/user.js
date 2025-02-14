@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -65,7 +64,7 @@ userSchema.methods.toJSON = function() {
   return userObject;
 };
 
-userSchema.statics.registerUserAndGenerateToken = function (data, callback) {
+userSchema.statics.registerUser = function (data, callback) {
   if (!data || typeof data !== 'object')
     return callback('bad_request');
 
@@ -83,58 +82,45 @@ userSchema.statics.registerUserAndGenerateToken = function (data, callback) {
     email: data.email,
     password: data.password
   });
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-
-  user.tokens = user.tokens.concat({ token });
 
   user
     .save()
-    .then(() => callback(null, { user, token }))
+    .then(() => callback(null, user))
     .catch(err => {
       console.error(err);
-      return callback('database_error')
+      return callback('database_error');
     });
 };
 
-// TODO: callbackify
+userSchema.statics.login = function (data, callback) {
+  if (!data || typeof data !== 'object')
+    return callback('bad_request');
 
-userSchema.statics.loginAndGenerateToken = function (email, password) {
-  return User.findOne({ email }).then((user) => {
-    if (!user) {
-      throw new Error("Unable to login");
-    }
-    return bcrypt.compare(password, user.password).then((isMatch) => {
-      if (!isMatch) {
-        throw new Error("Unable to login");
-      }
-      const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-      user.tokens = user.tokens.concat({ token });
-      return user.save().then(() => ({ user, token }));
-    });
-  });
-};
+  if (!data.email || typeof data.email !== 'string' || !validator.isEmail(data.email))
+    return callback('bad_request');
 
-userSchema.statics.logoutAndRemoveToken = function (user, token) {
-  user.tokens = user.tokens.filter((t) => t.token !== token);
-  return user.save();
-};
+  if (!data.password || typeof data.password !== 'string')
+    return callback('bad_request');
 
-userSchema.pre("save", function (next) {
-  const user = this;
+  User.findOne({ email: data.email })
+    .then(user => {
+      if (!user) return callback('authentication_failed');
 
-  if (!user.isModified("password"))
-    return next();
+      bcrypt.compare(data.password, user.password)
+        .then(isMatch => {
+          if (!isMatch) return callback('authentication_failed');
 
-  bcrypt.hash(user.password, 8)
-    .then((hashedPassword) => {
-      user.password = hashedPassword;
-      return next();
+          return callback(null, user);
+        })
+        .catch(err => {
+          console.error(err);
+          return callback('database_error');
+        });
     })
     .catch(err => {
       console.error(err);
-      return next(err);
+      return callback('database_error');
     });
-});
-
+};
 
 export const User = mongoose.model("User", userSchema);
