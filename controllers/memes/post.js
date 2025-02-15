@@ -15,7 +15,7 @@ export default (req, res) => {
     if (err)
       return res.status(400).json({
         success: false,
-        error: 'Meme creation failed' // TODO: standardize error messages
+        error: 'database_error'
       });
 
     return res.status(200).json({

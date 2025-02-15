@@ -37,18 +37,13 @@ memeSchema.statics.createMeme = function(data, callback) {
   if (!data.memeUrl || typeof data.memeUrl !== 'string')
     return callback('bad_request');
 
-  // TODO: use static create function instead of the method
-
-  const meme = new Meme({
+  Meme.create({
     title: data.title,
     description: data.description,
     memeUrl: data.memeUrl,
     owner: data.owner,
-  });
-
-  meme
-    .save()
-    .then(() => callback(null, meme))
+  })
+    .then(meme => callback(null, meme))
     .catch(err => {
       console.error(err);
       return callback('database_error');
@@ -56,7 +51,20 @@ memeSchema.statics.createMeme = function(data, callback) {
 };
 
 memeSchema.statics.findMemesByFilters = function(data, callback) {
-  // TODO: implement
-};
+  if (!data || typeof data !== 'object')
+    return callback('bad_request');
+
+  const filters = {};
+
+  if (data.owner && typeof data.owner === 'string')
+    filters.owner = data.owner;
+
+  Meme.find(filters)
+    .then(memes => callback(null, memes))
+    .catch(err => {
+      console.error(err);
+      return callback('database_error');
+    });
+}
 
 export const Meme = mongoose.model('Meme', memeSchema);
