@@ -5,18 +5,18 @@ block main
   div.memes-container
     each meme in memes
       div.meme
-        a(href=meme.memeUrl target='_blank') burdan görebilirsin
         h2= meme.title
+        img(src=`${process.env.R2_PUBLIC_ENDPOINT}/${meme.filename}`, alt=meme.title)
         p= meme.description
-    form.hidden#upload-form(action='/memes' method='POST')
+    form.hidden#upload-form(action='/memes' method='POST' enctype='multipart/form-data')
       div
-        label(for='title') Title
+        label(for='title') başlık
         input(type='text', name='title', id='title', required)
       div
-        label(for='description') Description
+        label(for='description') açıklama
         textarea(name='description', id='description', required)
       div
-        label(for='memeUrl') Meme URL
-        input(type='url', name='memeUrl', id='memeUrl', required)
+        label(for='filename') resim
+        input(type='file', name='filename', id='filename', required)
       div
-        button(type='submit') Upload Meme
+        button(type='submit') miim yükle

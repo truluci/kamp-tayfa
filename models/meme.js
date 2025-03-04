@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { uploadToR2 } from '../utils/r2.js';
 
 const memeSchema = new mongoose.Schema({
   title: {
@@ -11,7 +12,7 @@ const memeSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  memeUrl: {
+  filename: {
     type: String,
     required: true,
   },
@@ -24,40 +25,43 @@ const memeSchema = new mongoose.Schema({
   timestamps: true
 });
 
-memeSchema.statics.createMeme = function(data, callback) {
-  if (!data || typeof data !== 'object')
-    return callback('bad_request');
+memeSchema.statics.createMemeAndUploadToR2 = function (data, callback) {
+  if (!data || typeof data !== 'object') return callback('bad_request');
 
-  if (!data.title || typeof data.title !== 'string')
-    return callback('bad_request');
+  if (!data.title || typeof data.title !== 'string') return callback('bad_request');
 
-  if (!data.description || typeof data.description !== 'string')
-    return callback('bad_request');
+  if (!data.description || typeof data.description !== 'string') return callback('bad_request');
 
-  if (!data.memeUrl || typeof data.memeUrl !== 'string')
-    return callback('bad_request');
+  if (!data.filePath || typeof data.filePath !== 'string') return callback('bad_request');
 
-  Meme.create({
-    title: data.title,
-    description: data.description,
-    memeUrl: data.memeUrl,
-    owner: data.owner,
-  })
-    .then(meme => callback(null, meme))
-    .catch(err => {
-      console.error(err);
-      return callback('database_error');
+  if (!data.bucket || typeof data.bucket !== 'string') return callback('bad_request');
+
+  if (!data.owner) return callback('bad_request');
+
+  uploadToR2({ filePath: data.filePath, bucket: data.bucket }, (err, filename) => {
+    if (err) return callback(err);
+
+    const meme = new Meme({
+      title: data.title,
+      description: data.description,
+      filename,
+      owner: data.owner,
     });
+
+    meme
+      .save()
+      .then((meme) => callback(null, meme))
+      .catch((err) => {
+        console.error('Database Error:', err);
+        return callback('database_error');
+      });
+  });
 };
 
-memeSchema.statics.findMemesByFilters = function(data, callback) {
-  if (!data || typeof data !== 'object')
+
+memeSchema.statics.findMemesByFilters = function(filters, callback) {
+  if (!filters || typeof filters !== 'object')
     return callback('bad_request');
-
-  const filters = {};
-
-  if (data.owner && typeof data.owner === 'string')
-    filters.owner = data.owner;
 
   Meme.find(filters)
     .then(memes => callback(null, memes))
@@ -65,6 +69,6 @@ memeSchema.statics.findMemesByFilters = function(data, callback) {
       console.error(err);
       return callback('database_error');
     });
-}
+};
 
 export const Meme = mongoose.model('Meme', memeSchema);

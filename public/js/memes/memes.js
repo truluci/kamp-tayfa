@@ -4,27 +4,23 @@ window.addEventListener('load', () => {
   document.addEventListener('click', event => {
     if (event.target.closest('#toggle-upload-button')) {
       uploadForm.classList.toggle('hidden');
-    };
+    }
   });
 
   document.addEventListener('submit', (event) => {
     if (!event.target.closest('#upload-form')) return;
-
+    
     event.preventDefault();
 
     const formData = new FormData(uploadForm);
-    const data = Object.fromEntries(formData.entries()); // Convert FormData to plain object
 
     fetch('/memes', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      body: formData,
     })
       .then(response => response.json())
       .then(result => {
-        if (result.success)
+        if (result.success) 
           return window.location.reload();
 
         alert(result.error);
