@@ -1,4 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
@@ -14,7 +15,6 @@ const s3 = new S3Client({
   },
 });
 
-// Function to upload an image to R2
 export const uploadToR2 = (data, callback) => {
   if (!data || typeof data !== 'object')
     return callback('bad_request');
@@ -27,7 +27,6 @@ export const uploadToR2 = (data, callback) => {
 
   const uniqueFilename = `${Date.now()}-${path.basename(data.filePath)}`;
   const fileStream = fs.createReadStream(data.filePath);
-  console.log(fileStream);
 
   const uploadParams = {
     Bucket: data.bucket,
@@ -35,8 +34,6 @@ export const uploadToR2 = (data, callback) => {
     Body: fileStream,
     ContentType: "image/jpg",
   };
-
-  console.log(uploadParams);
 
   s3.send(new PutObjectCommand(uploadParams))
     .then(() => callback(null, uniqueFilename))

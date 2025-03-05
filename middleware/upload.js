@@ -3,9 +3,8 @@ import path from 'path';
 import fs from 'fs';
 
 const uploadDir = 'uploads/';
-if (!fs.existsSync(uploadDir)) {
+if (!fs.existsSync(uploadDir))
   fs.mkdirSync(uploadDir);
-}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -22,11 +21,10 @@ const fileFilter = (req, file, cb) => {
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
 
-  if (extname && mimetype) {
+  if (extname && mimetype) 
     return cb(null, true);
-  } else {
+  else 
     return cb(new Error('Only images (jpg, jpeg, png) are allowed'));
-  }
 };
 
 const upload = multer({

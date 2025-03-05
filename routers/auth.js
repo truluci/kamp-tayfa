@@ -14,7 +14,6 @@ authRouter.get('/login',
 authRouter.post('/login',
   loginPostController
 );
-
 authRouter.post('/logout',
   logoutPostController
 );
