@@ -42,3 +42,26 @@ export const uploadToR2 = (data, callback) => {
       return callback('r2_upload_error');
     });
 };
+
+export const deleteFromR2 = (data, callback) => {
+  if (!data || typeof data !== 'object')
+    return callback('bad_request');
+
+  if (!data.filename || typeof data.filename !== 'string')
+    return callback('bad_request');
+
+  if (!data.bucket || typeof data.bucket !== 'string')
+    return callback('bad_request');
+
+  const deleteParams = {
+    Bucket: data.bucket,
+    Key: data.filename,
+  };
+
+  s3.send(new DeleteObjectCommand(deleteParams))
+    .then(() => callback(null))
+    .catch((err) => {
+      console.error("R2 Delete Error:", err);
+      return callback('r2_delete_error');
+    });
+};

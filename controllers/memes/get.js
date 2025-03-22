@@ -15,7 +15,8 @@ export default (req, res) => {
         css: ['header', 'page', 'general']
       },
       memes,
-      user: req.user
+      user: req.user,
+      search: req.query.search || ''
     });;
   });
 };
