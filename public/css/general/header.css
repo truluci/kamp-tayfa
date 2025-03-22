@@ -1,6 +1,7 @@
 :root {
   --navbar-padding: 1.5rem;
   --navbar-button-spacing: 1.5rem;
+  --navbar-button-padding: 0.5rem 0.5rem;
   --navbar-buttons-border-radius: 0px;
   --navbar-button-width: 7rem; /* Minimum width for navbar buttons */
   --navbar-button-height: 3rem; /* Minimum height for navbar buttons */
@@ -31,7 +32,7 @@ body {
 .header-wrapper-home {
   color: var(--text-color);
   border-radius: var(--border-radius-lg);
-  padding: 0.5rem 0.5rem;
+  padding: var(--navbar-button-padding);
   background-color: var(--button-bg-color);
   text-decoration: none;
   width: fit-content;
@@ -99,11 +100,6 @@ body {
   .header-wrapper-home {
     width: var(--navbar-button-height);
     min-width: var(--navbar-button-height);
-    background-image: url('../../home.svg');
-    background-size: 30px 30px;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: transparent;
   }
 }
 @media only screen and (max-width: 344px) {

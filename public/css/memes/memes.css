@@ -1,9 +1,6 @@
 /* Search Bar */
-.search-wrapper {
+#search-form {
   position: relative;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto var(--spacing);
 }
 
 #search-form input {
