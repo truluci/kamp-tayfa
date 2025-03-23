@@ -1,8 +1,6 @@
-import { google } from 'googleapis';
 import fs from 'fs';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { google } from 'googleapis';
+import 'dotenv/config';
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.YOUTUBE_CLIENT_ID,
@@ -34,8 +32,7 @@ export const uploadToYouTube = (data, callback) => {
     requestBody: {
       snippet: {
         title: data.title,
-        description: data.description,
-        categoryId: '24',
+        description: data.description
       },
       status: {
         privacyStatus: 'private',

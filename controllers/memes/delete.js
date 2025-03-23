@@ -12,6 +12,6 @@ export default (req, res) => {
       return res.status(500).json({ success: false, error: err });
     }
 
-    return res.status(204).end();
+    return res.status(204).end(); // TODO: burada da .json()
   });
 };

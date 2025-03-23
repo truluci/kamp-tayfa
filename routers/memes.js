@@ -25,4 +25,6 @@ memesRouter.delete('/:id',
   memesDeleteController
 );
 
+// TODO: update meme title, description
+
 export default memesRouter;

@@ -25,6 +25,7 @@ const memeSchema = new mongoose.Schema({
     required: true,
     ref: 'User',
   },
+  // TODO: labels [] string
 }, { timestamps: true });
 
 memeSchema.statics.createMemeAndUpload = function (data, callback) {
@@ -39,11 +40,12 @@ memeSchema.statics.createMemeAndUpload = function (data, callback) {
     // Upload image to R2
     uploadToR2({ filePath: data.filePath, bucket: data.bucket }, (err, filename) => {
       if (err) return callback(err);
-      Meme.create({ 
+
+      Meme.create({
         title: data.title,
         description: data.description,
         fileType: 'image',
-        filename,
+        filename, // TODO: fileUrl ile değiştirelim
         owner: data.owner
       })
         .then(meme => callback(null, meme))
@@ -63,6 +65,8 @@ memeSchema.statics.createMemeAndUpload = function (data, callback) {
           return callback('database_error');
         });
     });
+  } else {
+    return callback('not_possible_error');
   }
 };
 
@@ -79,7 +83,8 @@ memeSchema.statics.deleteMeme = function (data, callback) {
       if (meme.fileType === 'image') {
         deleteFromR2({ filename: meme.filename, bucket: data.bucket }, err => {
           if (err) return callback(err);
-          meme.deleteOne()
+
+          Meme.deleteOne({ _id: meme._id })
             .then(() => callback(null))
             .catch(err => {
               console.error('Database Error:', err);
@@ -89,7 +94,8 @@ memeSchema.statics.deleteMeme = function (data, callback) {
       } else if (meme.fileType === 'video') {
         deleteFromYouTube({ videoId: meme.videoId }, err => {
           if (err) return callback(err);
-          meme.deleteOne()
+
+          Meme.deleteOne({ _id: meme._id })
             .then(() => callback(null))
             .catch(err => {
               console.error('Database Error:', err);
@@ -102,8 +108,9 @@ memeSchema.statics.deleteMeme = function (data, callback) {
       console.error('Database Error:', err);
       return callback('database_error');
     });
-}
+};
 
+// TODO: implement pagination
 memeSchema.statics.findMemesByFilters = function (data, callback) {
   if (!data || typeof data !== 'object') return callback('bad_request');
 
@@ -127,6 +134,5 @@ memeSchema.statics.findMemesByFilters = function (data, callback) {
       return callback('database_error');
     });
 };
-
 
 export const Meme = mongoose.model('Meme', memeSchema);

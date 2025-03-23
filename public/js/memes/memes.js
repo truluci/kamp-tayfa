@@ -5,9 +5,8 @@ window.addEventListener('load', () => {
     if (event.target.closest('#toggle-upload-button'))
       uploadForm.classList.toggle('hidden');
 
-    // Handle Delete Button Click
-    const deleteButton = event.target.closest('.delete-button');
-    if (deleteButton) {
+    if (event.target.closest('.delete-button')) {
+      const deleteButton = event.target.closest('.delete-button');
       event.preventDefault();
 
       const memeId = deleteButton.getAttribute('data-id');
@@ -16,8 +15,10 @@ window.addEventListener('load', () => {
 
       fetch(`/memes/${memeId}`, { method: 'DELETE' })
         .then(response => {
-          if (!response.ok) throw new Error('Failed to delete');
-          deleteButton.closest('.meme').remove(); // Remove from UI
+          if (!response.ok)
+            return alert('Failed to delete');
+
+          deleteButton.closest('.meme').remove();
         })
         .catch(err => {
           console.error(err);
@@ -28,7 +29,7 @@ window.addEventListener('load', () => {
 
   document.addEventListener('submit', (event) => {
     if (!event.target.closest('#upload-form')) return;
-    
+
     event.preventDefault();
     const formData = new FormData(uploadForm);
 

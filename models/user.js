@@ -79,7 +79,7 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.statics.findUserById = function(id, callback) {
-  if (!id || typeof id !== 'string' || !validator.isMongoId(id))
+  if (!id || typeof id !== 'string' || !mongoose.isValidObjectId(id))
     return callback('bad_request');
 
   User.findById(new mongoose.Types.ObjectId(id))

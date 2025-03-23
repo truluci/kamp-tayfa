@@ -26,6 +26,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false, httpOnly: true, sameSite: 'strict' }
+  // TODO: memory yerine mongoda tutulsun: https://www.npmjs.com/package/connect-mongo
 }));
 
 

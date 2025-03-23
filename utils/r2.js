@@ -1,10 +1,8 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
-import dotenv from "dotenv";
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
-
-dotenv.config();
 
 const s3 = new S3Client({
   region: "auto",
@@ -36,7 +34,11 @@ export const uploadToR2 = (data, callback) => {
   };
 
   s3.send(new PutObjectCommand(uploadParams))
-    .then(() => callback(null, uniqueFilename))
+    .then(() => {
+      // TODO: unlink files after successful upload
+
+      return callback(null, uniqueFilename);
+    })
     .catch((err) => {
       console.error("R2 Upload Error:", err);
       return callback('r2_upload_error');
