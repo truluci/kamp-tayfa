@@ -69,17 +69,17 @@ memeSchema.statics.createMemeAndUpload = function (data, callback) {
 memeSchema.statics.deleteMeme = function (data, callback) {
   if (!data || typeof data !== 'object') return callback('bad_request');
   if (!data.memeId || typeof data.memeId !== 'string') return callback('bad_request');
-  if (!data.owner || typeof data.owner !== 'string') return callback('bad_request');
+  if (!data.owner || !mongoose.isValidObjectId(data.owner)) return callback('bad_request');
 
   Meme.findById(data.memeId)
     .then(meme => {
       if (!meme) return callback('not_found');
-      if (meme.owner.toString() !== data.owner) return callback('forbidden');
+      if (meme.owner.toString() !== data.owner.toString()) return callback('not_authorized');
 
       if (meme.fileType === 'image') {
         deleteFromR2({ filename: meme.filename, bucket: data.bucket }, err => {
           if (err) return callback(err);
-          meme.remove()
+          meme.deleteOne()
             .then(() => callback(null))
             .catch(err => {
               console.error('Database Error:', err);
@@ -89,7 +89,7 @@ memeSchema.statics.deleteMeme = function (data, callback) {
       } else if (meme.fileType === 'video') {
         deleteFromYouTube({ videoId: meme.videoId }, err => {
           if (err) return callback(err);
-          meme.remove()
+          meme.deleteOne()
             .then(() => callback(null))
             .catch(err => {
               console.error('Database Error:', err);

@@ -14,12 +14,8 @@ block main
         img(src=`${process.env.R2_PUBLIC_ENDPOINT}/${meme.filename}`, alt=meme.title)
         p= meme.description
         if `${user._id}` == `${meme.owner}`
-          form#delete-form(action=`/memes` method='delete')
-            input(type='hidden' name='id' value=meme._id)
-            input(type='hidden' name='user' value=user)
-            input(type='hidden' name='token' value=token)
-            button(type='submit')
-              i(class='fas fa-trash')
+          button.delete-button(data-id=meme._id)
+            i(class='fas fa-trash')
     form.hidden#upload-form(action='/memes' method='POST' enctype='multipart/form-data')
       div
         label(for='title') başlık

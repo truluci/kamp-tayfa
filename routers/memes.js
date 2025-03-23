@@ -20,7 +20,7 @@ memesRouter.post('/',
   memesPostController
 );
 
-memesRouter.delete('/',
+memesRouter.delete('/:id',
   isAuth,
   memesDeleteController
 );
