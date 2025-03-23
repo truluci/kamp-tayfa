@@ -3,7 +3,8 @@ import { Meme } from "../../models/meme.js";
 export default (req, res) => {
   Meme.deleteMeme({
     memeId: req.params.memeId,
-    owner: req.user._id
+    owner: req.user._id,
+    bucket: process.env.R2_BUCKET,
   }, err => {
     if (err) {
       console.error(err);
