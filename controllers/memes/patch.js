@@ -1,17 +1,17 @@
-import "dotenv/config.js";
 import { Meme } from "../../models/meme.js";
 
 export default (req, res) => {
-  Meme.deleteMeme({
+  Meme.updateMeme({
     memeId: req.params.id,
     owner: req.user._id,
-    bucket: process.env.R2_BUCKET_NAME,
-  }, err => {
+    title: req.body.title,
+    description: req.body.description,
+  }, (err, meme) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ success: false, error: err });
     }
 
-    return res.status(204).json({ success: true });
+    return res.status(200).json({ success: true, meme });
   });
 };

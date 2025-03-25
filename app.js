@@ -2,6 +2,7 @@ import 'dotenv/config.js';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 import session from 'express-session';
 
 import indexRouter from './routers/index.js';
@@ -25,8 +26,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/kamp-tayfa',
+    collectionName: 'sessions'
+   }),
   cookie: { secure: false, httpOnly: true, sameSite: 'strict' }
-  // TODO: memory yerine mongoda tutulsun: https://www.npmjs.com/package/connect-mongo
 }));
 
 

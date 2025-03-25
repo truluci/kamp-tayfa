@@ -47,13 +47,13 @@ export const uploadToR2 = (data, callback) => {
 
 export const deleteFromR2 = (data, callback) => {
   if (!data || typeof data !== 'object')
-    return callback('bad_request');
+    return callback('bad_request1');
 
   if (!data.filename || typeof data.filename !== 'string')
-    return callback('bad_request');
+    return callback('bad_request2' + data.filename);
 
   if (!data.bucket || typeof data.bucket !== 'string')
-    return callback('bad_request');
+    return callback('bad_request3');
 
   const deleteParams = {
     Bucket: data.bucket,

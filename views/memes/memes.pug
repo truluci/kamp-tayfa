@@ -11,11 +11,15 @@ block main
     each meme in memes
       div.meme
         h2= meme.title
-        img(src=`${process.env.R2_PUBLIC_ENDPOINT}/${meme.filename}`, alt=meme.title)
+        img(src=meme.fileUrl, alt=meme.title)
         p= meme.description
         if `${user._id}` == `${meme.owner}`
-          button.delete-button(data-id=meme._id)
-            i(class='fas fa-trash')
+          div.meme-actions
+            button.delete-button(data-id=meme._id)
+              i(class='fas fa-trash')
+            button.edit-button(data-id=meme._id, data-title=meme.title, data-description=meme.description)
+              i(class='fas fa-edit')
+
     form.hidden#upload-form(action='/memes' method='POST' enctype='multipart/form-data')
       div
         label(for='title') başlık
@@ -28,3 +32,14 @@ block main
         input(type='file', name='filename', id='filename', required)
       div
         button(type='submit') miim yükle
+
+    form.hidden#edit-form
+      input(type='hidden', name='memeId', id='edit-meme-id')
+      div
+        label(for='edit-title') Başlık
+        input(type='text', name='title', id='edit-title', required)
+      div
+        label(for='edit-description') Açıklama
+        textarea(name='description', id='edit-description', required)
+      div
+        button(type='submit') Güncelle

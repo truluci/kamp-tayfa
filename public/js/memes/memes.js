@@ -1,5 +1,6 @@
 window.addEventListener('load', () => {
   const uploadForm = document.getElementById('upload-form');
+  const editForm = document.getElementById('edit-form');
 
   document.addEventListener('click', (event) => {
     if (event.target.closest('#toggle-upload-button'))
@@ -25,23 +26,64 @@ window.addEventListener('load', () => {
           alert('Error deleting meme');
         });
     }
+
+    if (event.target.closest('.edit-button')) {
+      const editButton = event.target.closest('.edit-button');
+      event.preventDefault();
+
+      // Get existing values
+      const memeId = editButton.getAttribute('data-id');
+      const title = editButton.getAttribute('data-title');
+      const description = editButton.getAttribute('data-description');
+
+      // Fill the edit form
+      document.getElementById('edit-meme-id').value = memeId;
+      document.getElementById('edit-title').value = title;
+      document.getElementById('edit-description').value = description;
+
+      // Show edit form
+      editForm.classList.remove('hidden');
+    }
   });
 
   document.addEventListener('submit', (event) => {
-    if (!event.target.closest('#upload-form')) return;
+    if (event.target.closest('#upload-form')) {
+      event.preventDefault();
+      const formData = new FormData(uploadForm);
 
-    event.preventDefault();
-    const formData = new FormData(uploadForm);
+      fetch('/memes', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(result => {
+          if (result.success) return window.location.reload();
+          alert(result.error);
+        })
+        .catch(err => {
+          console.error(err);
+          alert('An error occurred while adding meme');
+        });
+    }
 
-    fetch('/memes', { method: 'POST', body: formData })
-      .then(response => response.json())
-      .then(result => {
-        if (result.success) return window.location.reload();
-        alert(result.error);
+    if (event.target.closest('#edit-form')) {
+      event.preventDefault();
+
+      const memeId = document.getElementById('edit-meme-id').value;
+      const title = document.getElementById('edit-title').value;
+      const description = document.getElementById('edit-description').value;
+
+      fetch(`/memes/${memeId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description })
       })
-      .catch(err => {
-        console.error(err);
-        alert('An error occurred while adding meme');
-      });
+        .then(response => response.json())
+        .then(result => {
+          if (result.success) return window.location.reload();
+          alert(result.error);
+        })
+        .catch(err => {
+          console.error(err);
+          alert('An error occurred while updating meme');
+        });
+    }
   });
 });

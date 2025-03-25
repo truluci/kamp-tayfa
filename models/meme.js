@@ -1,6 +1,7 @@
 import { uploadToR2, deleteFromR2 } from '../utils/r2.js';
 import { uploadToYouTube, deleteFromYouTube } from '../utils/youtube.js';
 import mongoose from 'mongoose';
+import 'dotenv/config.js';
 
 const memeSchema = new mongoose.Schema({
   title: {
@@ -20,12 +21,12 @@ const memeSchema = new mongoose.Schema({
   },
   filename: String,
   videoId: String,
+  fileUrl: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
   },
-  // TODO: labels [] string
 }, { timestamps: true });
 
 memeSchema.statics.createMemeAndUpload = function (data, callback) {
@@ -45,7 +46,8 @@ memeSchema.statics.createMemeAndUpload = function (data, callback) {
         title: data.title,
         description: data.description,
         fileType: 'image',
-        filename, // TODO: fileUrl ile değiştirelim
+        filename,
+        fileUrl: `${process.env.R2_PUBLIC_ENDPOINT}/${filename}`,
         owner: data.owner
       })
         .then(meme => callback(null, meme))
@@ -103,6 +105,37 @@ memeSchema.statics.deleteMeme = function (data, callback) {
             });
         });
       }
+    })
+    .catch(err => {
+      console.error('Database Error:', err);
+      return callback('database_error');
+    });
+};
+
+memeSchema.statics.updateMeme = function (data, callback) {
+  if (!data || typeof data !== 'object') return callback('bad_request');
+  if (!data.memeId || typeof data.memeId !== 'string') return callback('bad_request');
+  if (!data.owner || !mongoose.isValidObjectId(data.owner)) return callback('bad_request');
+
+  Meme.findById(data.memeId)
+    .then(meme => {
+      if (!meme) return callback('not_found');
+      if (meme.owner.toString() !== data.owner.toString()) return callback('not_authorized');
+
+      if (data.title && typeof data.title === 'string') {
+        meme.title = data.title;
+      }
+
+      if (data.description && typeof data.description === 'string') {
+        meme.description = data.description;
+      }
+
+      Meme.updateOne({ _id: meme._id }, meme)
+        .then(() => callback(null, meme))
+        .catch(err => {
+          console.error('Database Error:', err);
+          return callback('database_error');
+        });
     })
     .catch(err => {
       console.error('Database Error:', err);
