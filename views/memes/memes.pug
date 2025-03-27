@@ -27,6 +27,11 @@ block main
       div
         label(for='description') açıklama
         textarea(name='description', id='description', required)
+      //- div
+      //-   label(for='label') etiketler
+      //-   div.each-label
+      //-     div.label example label
+      //-     button.label-add-button +
       div
         label(for='filename') resim
         input(type='file', name='filename', id='filename', required)
@@ -36,10 +41,18 @@ block main
     form.hidden#edit-form
       input(type='hidden', name='memeId', id='edit-meme-id')
       div
-        label(for='edit-title') Başlık
+        label(for='edit-title') başlık
         input(type='text', name='title', id='edit-title', required)
       div
-        label(for='edit-description') Açıklama
+        label(for='edit-description') açıklama
         textarea(name='description', id='edit-description', required)
       div
-        button(type='submit') Güncelle
+        button(type='submit') güncelle
+
+  if totalPages > 1
+    div.pagination
+      if currentPage > 1
+        a.pagination-button(href=`/memes?page=${currentPage - 1}&search=${search}`) önceki
+      span Page #{currentPage} of #{totalPages}
+      if currentPage < totalPages
+        a.pagination-button(href=`/memes?page=${currentPage + 1}&search=${search}`) sonraki

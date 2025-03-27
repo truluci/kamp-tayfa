@@ -1,3 +1,4 @@
+import { Label } from './label.js';
 import { uploadToR2, deleteFromR2 } from '../utils/r2.js';
 import { uploadToYouTube, deleteFromYouTube } from '../utils/youtube.js';
 import mongoose from 'mongoose';
@@ -27,6 +28,10 @@ const memeSchema = new mongoose.Schema({
     required: true,
     ref: 'User',
   },
+  labels: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Label',
+  }],
 }, { timestamps: true });
 
 memeSchema.statics.createMemeAndUpload = function (data, callback) {
@@ -143,11 +148,13 @@ memeSchema.statics.updateMeme = function (data, callback) {
     });
 };
 
-// TODO: implement pagination
 memeSchema.statics.findMemesByFilters = function (data, callback) {
   if (!data || typeof data !== 'object') return callback('bad_request');
 
   const filters = {};
+  const page = parseInt(data.page) || 1;
+  const limit = 9;
+  const skip = (page - 1) * limit;
 
   if (data.owner && typeof data.owner === 'string') {
     filters.owner = data.owner;
@@ -155,13 +162,23 @@ memeSchema.statics.findMemesByFilters = function (data, callback) {
 
   if (data.search && typeof data.search === 'string') {
     filters.$or = [
-      { title: { $regex: data.search, $options: 'i' } }, // Case-insensitive search
+      { title: { $regex: data.search, $options: 'i' } },
       { description: { $regex: data.search, $options: 'i' } }
     ];
   }
 
   Meme.find(filters)
-    .then((memes) => callback(null, memes))
+    .skip(skip)
+    .limit(limit)
+    .then((memes) => {
+      Meme.countDocuments(filters).then((total) => {
+        callback(null, {
+          memes,
+          totalPages: Math.ceil(total / limit),
+          currentPage: page
+        });
+      });
+    })
     .catch((err) => {
       console.error(err);
       return callback('database_error');

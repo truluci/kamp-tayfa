@@ -35,7 +35,12 @@ export const uploadToR2 = (data, callback) => {
 
   s3.send(new PutObjectCommand(uploadParams))
     .then(() => {
-      // TODO: unlink files after successful upload
+      fs.unlink(data.filePath, (err) => {
+        if (err) {
+          console.error("File Deletion Error:", err);
+          return callback('file_deletion_error');
+        }
+      });
 
       return callback(null, uniqueFilename);
     })
@@ -47,13 +52,13 @@ export const uploadToR2 = (data, callback) => {
 
 export const deleteFromR2 = (data, callback) => {
   if (!data || typeof data !== 'object')
-    return callback('bad_request1');
+    return callback('bad_request');
 
   if (!data.filename || typeof data.filename !== 'string')
-    return callback('bad_request2' + data.filename);
+    return callback('bad_request');
 
   if (!data.bucket || typeof data.bucket !== 'string')
-    return callback('bad_request3');
+    return callback('bad_request');
 
   const deleteParams = {
     Bucket: data.bucket,
