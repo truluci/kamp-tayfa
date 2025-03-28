@@ -126,7 +126,7 @@
 
 #edit-form input,
 #edit-form textarea,
-#edit-form button {
+#submit-edit-form-button {
   width: 100%;
   font-size: var(--font-size-medium);
   padding: var(--button-padding);
@@ -138,7 +138,7 @@
   border: 1px solid var(--text-color);
 }
 
-#edit-form button {
+#submit-edit-form-button {
   background-color: var(--button-bg-color);
   color: var(--button-text-color);
   border: none;
@@ -228,7 +228,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  padding-bottom: var(--page-vertical-padding);
 }
 
 .pagination-button {

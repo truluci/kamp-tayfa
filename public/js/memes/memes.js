@@ -10,7 +10,7 @@ window.addEventListener('load', () => {
       const deleteButton = event.target.closest('.delete-button');
       event.preventDefault();
 
-      const memeId = deleteButton.getAttribute('data-id');
+      const memeId = deleteButton.closest('.meme').getAttribute('data-id');
 
       if (!confirm('Are you sure you want to delete this meme?')) return;
 
@@ -43,6 +43,18 @@ window.addEventListener('load', () => {
 
       // Show edit form
       editForm.classList.remove('hidden');
+      return
+    }
+
+    if (
+      !event.target.closest('#upload-form') &&
+      !event.target.closest('#toggle-upload-button')
+    ) {
+      uploadForm.classList.add('hidden');
+    }
+
+    if (!event.target.closest('#edit-form') && !event.target.closest('.edit-button')) {
+      editForm.classList.add('hidden');
     }
   });
 
@@ -86,4 +98,35 @@ window.addEventListener('load', () => {
         });
     }
   });
+  
+  document.addEventListener('scroll', (event) => {
+    if (document.documentElement.scrollTop + document.documentElement.offsetHeight >= document.documentElement.scrollHeight ){
+      const lastMemeId = document.querySelector('.meme:last-of-type').getAttribute('data-id');
+      const search = document.querySelector('.search-input').value;
+
+      fetch(`/memes/filter?lastMemeId=${lastMemeId}&search=${search}`)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          if (result.length === 0) return;
+          const memesContainer = document.querySelector('.memes-container');
+          result.forEach(meme => {
+            const memeElement = document.createElement('div');
+            memeElement.classList.add('meme');
+            memeElement.setAttribute('data-id', meme._id);
+            memeElement.innerHTML = `
+              <h3>${meme.title}</h3>
+              <p>${meme.description}</p>
+              <button class="edit-button" data-id="${meme._id}" data-title="${meme.title}" data-description="${meme.description}">Edit</button>
+              <button class="delete-button" data-id="${meme._id}">Delete</button>
+            `;
+            memesContainer.appendChild(memeElement);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          alert('An error occurred while loading more memes');
+        });
+    }
+  }, { passive: true });
 });

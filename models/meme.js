@@ -4,6 +4,8 @@ import { uploadToYouTube, deleteFromYouTube } from '../utils/youtube.js';
 import mongoose from 'mongoose';
 import 'dotenv/config.js';
 
+const DEFAULT_FILTER_LIMIT = 9;
+
 const memeSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -40,10 +42,9 @@ memeSchema.statics.createMemeAndUpload = function (data, callback) {
   if (!data.description || typeof data.description !== 'string') return callback('bad_request');
   if (!data.filePath || typeof data.filePath !== 'string') return callback('bad_request');
   if (!data.fileType || !['image', 'video'].includes(data.fileType)) return callback('bad_request');
-  if (!data.owner) return callback('bad_request');
+  if (!data.owner || !mongoose.isValidObjectId(data.owner)) return callback('bad_request');
 
   if (data.fileType === 'image') {
-    // Upload image to R2
     uploadToR2({ filePath: data.filePath, bucket: data.bucket }, (err, filename) => {
       if (err) return callback(err);
 
@@ -62,10 +63,16 @@ memeSchema.statics.createMemeAndUpload = function (data, callback) {
         });
     });
   } else if (data.fileType === 'video') {
-    // Upload video to YouTube
     uploadToYouTube({ filePath: data.filePath, title: data.title, description: data.description }, (err, videoId) => {
       if (err) return callback(err);
-      Meme.create({ title: data.title, description: data.description, fileType: 'video', videoId, owner: data.owner })
+      
+      Meme.create({ 
+        title: data.title,
+        description: data.description,
+        fileType: 'video',
+        videoId,
+        owner: data.owner
+      })
         .then(meme => callback(null, meme))
         .catch(err => {
           console.error('Database Error:', err);
@@ -149,39 +156,25 @@ memeSchema.statics.updateMeme = function (data, callback) {
 };
 
 memeSchema.statics.findMemesByFilters = function (data, callback) {
-  if (!data || typeof data !== 'object') return callback('bad_request');
-
   const filters = {};
-  const page = parseInt(data.page) || 1;
-  const limit = 9;
-  const skip = (page - 1) * limit;
-
-  if (data.owner && typeof data.owner === 'string') {
-    filters.owner = data.owner;
-  }
-
-  if (data.search && typeof data.search === 'string') {
+  if (data.search) {
     filters.$or = [
       { title: { $regex: data.search, $options: 'i' } },
       { description: { $regex: data.search, $options: 'i' } }
     ];
   }
-
+  if (data.lastMemeId) {
+    filters._id = { $lt: data.lastMemeId }; // Fetch memes older than lastMemeId
+  }
+  const limit = data.limit || DEFAULT_FILTER_LIMIT;
+  
   Meme.find(filters)
-    .skip(skip)
+    .sort({ createdAt: -1 })
     .limit(limit)
-    .then((memes) => {
-      Meme.countDocuments(filters).then((total) => {
-        callback(null, {
-          memes,
-          totalPages: Math.ceil(total / limit),
-          currentPage: page
-        });
-      });
-    })
-    .catch((err) => {
+    .then(memes => callback(null, { memes }))
+    .catch(err => {
       console.error(err);
-      return callback('database_error');
+      callback('database_error');
     });
 };
 

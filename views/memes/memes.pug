@@ -3,19 +3,19 @@ extends ../partials/header.pug
 block main
   form#search-form(action='/memes' method='GET')
     div.search-wrapper
-      input(type='text', name='search', placeholder='Search memes...', value=search)
+      input.search-input(type='text', name='search', placeholder='Search memes...', value=search)
       button(type='submit')
         i(class='fas fa-search')
   button#toggle-upload-button ekle
   div.memes-container
     each meme in memes
-      div.meme
+      div.meme(data-id=meme._id)
         h2= meme.title
         img(src=meme.fileUrl, alt=meme.title)
         p= meme.description
         if `${user._id}` == `${meme.owner}`
           div.meme-actions
-            button.delete-button(data-id=meme._id)
+            button.delete-button
               i(class='fas fa-trash')
             button.edit-button(data-id=meme._id, data-title=meme.title, data-description=meme.description)
               i(class='fas fa-edit')
@@ -33,10 +33,10 @@ block main
       //-     div.label example label
       //-     button.label-add-button +
       div
-        label(for='filename') resim
+        label(for='filename') mim
         input(type='file', name='filename', id='filename', required)
       div
-        button(type='submit') miim yükle
+        button(type='submit') mim yükle
 
     form.hidden#edit-form
       input(type='hidden', name='memeId', id='edit-meme-id')
@@ -47,12 +47,4 @@ block main
         label(for='edit-description') açıklama
         textarea(name='description', id='edit-description', required)
       div
-        button(type='submit') güncelle
-
-  if totalPages > 1
-    div.pagination
-      if currentPage > 1
-        a.pagination-button(href=`/memes?page=${currentPage - 1}&search=${search}`) önceki
-      span Page #{currentPage} of #{totalPages}
-      if currentPage < totalPages
-        a.pagination-button(href=`/memes?page=${currentPage + 1}&search=${search}`) sonraki
+        button#submit-edit-form-button(type='submit') güncelle
