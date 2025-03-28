@@ -8,8 +8,8 @@ block main
         i(class='fas fa-search')
   button#toggle-upload-button ekle
   div.memes-container
-    each meme in memes
-      div.meme(data-id=meme._id)
+    mixin meme(meme)
+      div.meme.hidden(data-id=meme._id)
         h2= meme.title
         img(src=meme.fileUrl, alt=meme.title)
         p= meme.description
@@ -19,6 +19,16 @@ block main
               i(class='fas fa-trash')
             button.edit-button(data-id=meme._id, data-title=meme.title, data-description=meme.description)
               i(class='fas fa-edit')
+    template.meme-template.hidden
+      +meme({
+        _id: '',
+        title: '',
+        fileUrl: '',
+        description: '',
+        owner: ''
+      })
+    each meme in memes
+      +meme(meme)
 
     form.hidden#upload-form(action='/memes' method='POST' enctype='multipart/form-data')
       div
