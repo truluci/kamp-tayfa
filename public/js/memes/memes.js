@@ -32,7 +32,7 @@ window.addEventListener('load', () => {
       event.preventDefault();
 
       // Get existing values
-      const memeId = editButton.getAttribute('data-id');
+      const memeId = editButton.closest('.meme').getAttribute('data-id');
       const title = editButton.getAttribute('data-title');
       const description = editButton.getAttribute('data-description');
 
@@ -107,21 +107,26 @@ window.addEventListener('load', () => {
       fetch(`/memes/filter?lastMemeId=${lastMemeId}&search=${search}`)
         .then(response => response.json())
         .then(result => {
-          console.log(result);
-          if (result.length === 0) return;
-          const memesContainer = document.querySelector('.memes-container');
-          result.forEach(meme => {
-            const memeElement = document.createElement('div');
-            memeElement.classList.add('meme');
-            memeElement.setAttribute('data-id', meme._id);
-            memeElement.innerHTML = `
-              <h3>${meme.title}</h3>
-              <p>${meme.description}</p>
-              <button class="edit-button" data-id="${meme._id}" data-title="${meme.title}" data-description="${meme.description}">Edit</button>
-              <button class="delete-button" data-id="${meme._id}">Delete</button>
-            `;
-            memesContainer.appendChild(memeElement);
-          });
+          if (!result.success) return alert('Failed to load more memes');
+
+          for (const meme of result.memes) {
+            const template = document.querySelector('.meme-template').content.cloneNode(true);
+            const userId = document.querySelector('.hidden#user-id').getAttribute('data-user-id');
+            
+            template.querySelector('.meme').setAttribute('data-id', meme._id);
+            template.querySelector('h2').innerText = meme.title;
+            template.querySelector('img').src = meme.fileUrl;
+            template.querySelector('img').alt = meme.title;
+            template.querySelector('p').innerText = meme.description;
+            if (userId === meme.owner) {
+              const editButton = template.querySelector('.edit-button');
+              editButton.setAttribute('data-title', meme.title);
+              editButton.setAttribute('data-description', meme.description);
+            } else {
+              template.querySelector('.meme-actions').remove();
+            }
+            document.querySelector('.memes-container').appendChild(template);
+          }
         })
         .catch(err => {
           console.error(err);

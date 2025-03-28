@@ -1,6 +1,7 @@
 extends ../partials/header.pug
 
 block main
+  .hidden#user-id(data-user-id=user._id)
   form#search-form(action='/memes' method='GET')
     div.search-wrapper
       input.search-input(type='text', name='search', placeholder='Search memes...', value=search)
@@ -9,15 +10,15 @@ block main
   button#toggle-upload-button ekle
   div.memes-container
     mixin meme(meme)
-      div.meme.hidden(data-id=meme._id)
+      div.meme(data-id=meme._id)
         h2= meme.title
         img(src=meme.fileUrl, alt=meme.title)
         p= meme.description
-        if `${user._id}` == `${meme.owner}`
+        if user._id.toString() == meme.owner.toString()
           div.meme-actions
             button.delete-button
               i(class='fas fa-trash')
-            button.edit-button(data-id=meme._id, data-title=meme.title, data-description=meme.description)
+            button.edit-button(data-title=meme.title, data-description=meme.description)
               i(class='fas fa-edit')
     template.meme-template.hidden
       +meme({
@@ -25,7 +26,7 @@ block main
         title: '',
         fileUrl: '',
         description: '',
-        owner: ''
+        owner: user._id,
       })
     each meme in memes
       +meme(meme)
